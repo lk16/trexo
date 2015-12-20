@@ -4,6 +4,8 @@
 
 #define TREXO_FIELD_SIDE 10
 #define TREXO_NUM_FIELDS (TREXO_FIELD_SIDE * TREXO_FIELD_SIDE)
+#define TREXO_MAX_CHILDREN (4 * TREXO_FIELD_SIDE * (TREXO_FIELD_SIDE - 1))
+
 
 struct trexo_field{
 	int height,brick_id,is_x;
