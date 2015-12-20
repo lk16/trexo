@@ -1,6 +1,9 @@
 #pragma once
 
-const int trexo_field_side = 10;
+#include <stdio.h>
+
+#define TREXO_FIELD_SIDE 10
+#define TREXO_NUM_FIELDS (TREXO_FIELD_SIDE * TREXO_FIELD_SIDE)
 
 struct trexo_field{
 	int height,brick_id,is_x;
@@ -16,7 +19,7 @@ void trexo_field_init(
 // -------------------------------
 
 struct trexo_board{
-	struct trexo_field fields[trexo_field_side * trexo_field_size];
+	struct trexo_field fields[TREXO_NUM_FIELDS];
 	int next_brick_id;
 };
 
