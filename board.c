@@ -27,7 +27,11 @@ void trexo_board_print(
     int r,c;
     const struct trexo_field *field; 
 
-    printf("%s","+---------------------+\n");
+    printf("%s","+-");
+    for(c=0; c<TREXO_FIELD_SIDE; ++c){
+        printf("%s","--");
+    }
+    printf("%s","+\n");
 
     for(r=0; r<TREXO_FIELD_SIDE; ++r){
         printf("%s","|");
@@ -46,40 +50,131 @@ void trexo_board_print(
         printf("%s"," |\n");
     }
 
-
-    printf("%s","+---------------------+\n");
+    printf("%s","+-");
+    for(c=0; c<TREXO_FIELD_SIDE; ++c){
+        printf("%s","--");
+    }
+    printf("%s","+\n");
+    
 }
 
 void trexo_board_get_children(
-    const struct trexo_board *board,
+    struct trexo_board *board,
     struct trexo_board *output_start,
     struct trexo_board **output_end
 ){
     int r,c;
-    const struct trexo_board *field,*right,*below;
+    const struct trexo_field *left,*right,*top,*bottom;
 
     // horizontal bricks
     for(r=0; r<TREXO_FIELD_SIDE; ++r){
         for(c=0; c<TREXO_FIELD_SIDE - 1; ++c){
-            field = board->fields + (r * TREXO_FIELD_SIDE) + c;   
-            right = field + 1; 
+            
+            int left_offset = (r * TREXO_FIELD_SIDE) + c;
+            int right_offset = left_offset + 1;
+
+            left = board->fields + left_offset;   
+            right = board->fields + right_offset;
+
             if(
-                (field->height != right->height) 
-                || (field->height != 0 && field->brick_id == right->brick_id)
+                (left->height != right->height) 
+                || (left->height != 0 && left->brick_id == right->brick_id)
             ){
                 continue;
             }
-            *output_start = board;
-
-            // TODO add brick in both orientations to output start
 
 
+
+            // O on the left
+            *output_start = *board;
+            trexo_field_init(
+                output_start->fields + left_offset,
+                output_start->fields[left_offset].height + 1,
+                board->next_brick_id,
+                0
+            );
+            trexo_field_init(
+                output_start->fields + right_offset,
+                output_start->fields[right_offset].height + 1,
+                board->next_brick_id,
+                1
+            );
+            ++output_start;
+            ++board->next_brick_id;
+
+            // X on the left
+            *output_start = *board;
+            trexo_field_init(
+                output_start->fields + left_offset,
+                output_start->fields[left_offset].height + 1,
+                board->next_brick_id,
+                1
+            );
+            trexo_field_init(
+                output_start->fields + right_offset,
+                output_start->fields[right_offset].height + 1,
+                board->next_brick_id,
+                0
+            );
+            ++output_start;
+            ++board->next_brick_id;
         }
     }
 
+    // horizontal bricks
+    for(r=0; r < TREXO_FIELD_SIDE - 1; ++r){
+        for(c=0; c<TREXO_FIELD_SIDE; ++c){
+            
+            int top_offset = (r * TREXO_FIELD_SIDE) + c;
+            int bottom_offset = top_offset + TREXO_FIELD_SIDE;
 
-    // vertical bricks
-    // TODO
+            top = board->fields + top_offset;   
+            bottom = board->fields + bottom_offset;
 
-    *output_end = output_start + 1;
+            if(
+                (top->height != bottom->height) 
+                || (top->height != 0 && top->brick_id == bottom->brick_id)
+            ){
+                continue;
+            }
+
+
+
+            // O on the top
+            *output_start = *board;
+            trexo_field_init(
+                output_start->fields + top_offset,
+                output_start->fields[top_offset].height + 1,
+                board->next_brick_id,
+                0
+            );
+            trexo_field_init(
+                output_start->fields + bottom_offset,
+                output_start->fields[bottom_offset].height + 1,
+                board->next_brick_id,
+                1
+            );
+            ++output_start;
+            ++board->next_brick_id;
+
+            // X on the top
+            *output_start = *board;
+            trexo_field_init(
+                output_start->fields + top_offset,
+                output_start->fields[top_offset].height + 1,
+                board->next_brick_id,
+                1
+            );
+            trexo_field_init(
+                output_start->fields + bottom_offset,
+                output_start->fields[bottom_offset].height + 1,
+                board->next_brick_id,
+                0
+            );
+            ++output_start;
+            ++board->next_brick_id;
+        }
+    }
+
+    *output_end = output_start;
 }

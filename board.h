@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 
-#define TREXO_FIELD_SIDE 10
+#define TREXO_FIELD_SIDE 6
 #define TREXO_NUM_FIELDS (TREXO_FIELD_SIDE * TREXO_FIELD_SIDE)
 #define TREXO_MAX_CHILDREN (4 * TREXO_FIELD_SIDE * (TREXO_FIELD_SIDE - 1))
 
@@ -34,7 +34,7 @@ void trexo_board_print(
 );
 
 void trexo_board_get_children(
-	const struct trexo_board *board,
+	struct trexo_board *board,
 	struct trexo_board *output_start,
 	struct trexo_board **output_end
 );
