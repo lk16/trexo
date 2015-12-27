@@ -6,6 +6,8 @@
 
 #include <gtk/gtk.h>
 
+#include <glib.h>
+
 #include "board.h"
 #include "clickable_image.h"
 
@@ -24,38 +26,71 @@ struct trexo_game_state{
 };
 
 
-void game_state_init(struct game_state* gs);
+void game_state_init(
+    struct trexo_game_state* gs
+);
 
-void game_state_update_turn(struct game_state* gs);
+void game_state_update_turn(
+    struct trexo_game_state* gs
+);
 
-void game_state_print(const struct game_state* gs,FILE* file);
+void game_state_print(
+    const struct trexo_game_state* gs,
+    FILE* file
+);
 
-void game_state_switch_turn(struct game_state* gs);
+void game_state_switch_turn(
+    struct trexo_game_state* gs
+);
 
-struct game_state* game_state_get_children(const struct game_state* gs,struct game_state* out);
+struct game_state* game_state_get_children(
+    const struct trexo_game_state* gs,
+    struct game_state* out
+);
 
 struct main_window;
 
-void main_window_update_fields(struct main_window*,const struct game_state*);
+void main_window_update_fields(
+    struct main_window*,
+    const struct trexo_game_state*
+);
 
-struct game_config{
+struct trexo_game_config{
     //struct player players[2];
-    //struct game_state history[61];
-    //int current,redo_max;
+    GArray *state_history;
+    int current,redo_max;
     struct trexo_game_state *state;
     struct main_window* window;
-;
+};
 
-void game_config_init(struct game_config* gc,struct main_window* mw);
+void trexo_game_config_init(
+    struct trexo_game_config* gc,
+    struct main_window* mw
+);
 
-void game_config_on_new_game(struct game_config* gc);
+void trexo_game_config_on_new_game(
+    struct trexo_game_config* gc
+);
 
-void game_config_on_ended(const struct game_config* gc);
+void trexo_game_config_on_ended(
+    const struct trexo_game_config* gc
+);
 
-void game_config_on_any_move(struct game_config* gc,const struct board* child);
+void trexo_game_config_on_any_move(
+    struct trexo_game_config* gc,
+    const struct trexo_board* child
+);
 
-void game_config_show_updated_field(const struct game_config* gc);
+void trexo_game_config_show_updated_field(
+    const struct trexo_game_config* gc
+);
 
-int game_config_timeout(struct game_config* gc);
+int trexo_game_config_timeout(
+    struct trexo_game_config* gc
+);
 
-void game_config_process_click(struct game_config* gc, int index,int button);
+void trexo_game_config_process_click(
+    struct trexo_game_config* gc,
+    int index,
+    int button
+);

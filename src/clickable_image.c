@@ -4,7 +4,7 @@ void clickable_image_init(
   struct clickable_image* ci, 
   const char* file,
   int index,
-  struct game_config* gc
+  struct trexo_game_config* gc
 ){
     ci->gc = gc;
     ci->index = index;  
@@ -17,7 +17,7 @@ void clickable_image_init(
   );
 }
 
-void game_config_process_click(struct game_config*,int,int);
+void game_config_process_click(struct trexo_game_config*,int,int);
 
 void clickable_image_on_click(
   GtkWidget* widget,

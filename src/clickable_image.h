@@ -13,14 +13,14 @@ struct clickable_image{
   GtkWidget* image;
   GtkWidget* ebox;
   int index;
-  struct game_config* gc;
+  struct trexo_game_config* gc;
 };
 
 void clickable_image_init(
   struct clickable_image* ci,
   const char* file,
   int index,
-  struct game_config* gc
+  struct trexo_game_config* gc
 );
 
 void clickable_image_on_click(

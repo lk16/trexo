@@ -9,16 +9,16 @@
 
 
 
-struct main_window{
+struct trexo_main_window{
   GtkWidget* window;
   GtkWidget* vbox;
   GtkWidget* table;
   struct clickable_image images[8][8];
-  struct game_config config;
+  struct trexo_game_config config;
 };
 
 
-void main_window_init(struct main_window* mw);
-void main_window_table_init(struct main_window* mw);
+void trexo_main_window_init(struct trexo_ain_window* mw);
+void trexo_main_window_table_init(struct trexo_main_window* mw);
 
-void main_window_update_fields(struct main_window* mw,const struct game_state* gs);
+void trexo_main_window_update_fields(struct trexo_main_window* mw,const struct trexo_game_state* gs);

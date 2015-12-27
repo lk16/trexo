@@ -1,78 +1,58 @@
 #include "game_config.h"
 
-void game_config_on_new_game(struct game_config* gc)
-{
-   game_config_show_updated_field(gc);
+void trexo_game_config_on_new_game(
+    struct trexo_game_config* gc
+){
+   trexo_game_config_show_updated_field(gc);
 }
 
-void game_config_init(struct game_config* gc,struct main_window* mw)
-{
+void trexo_game_config_init(
+    struct trexo_game_config* gc,
+    struct main_window* mw
+){
     gc->window = mw;
-    game_config_on_new_game(gc);
+    trexo_game_config_on_new_game(gc);
 }
 
-void game_config_show_updated_field(const struct game_config* gc)
-{
-    const struct game_state* current = gc->state;
+void trexo_game_config_show_updated_field(
+    const struct trexo_game_config* gc
+){
+    const struct trexo_game_state* current = gc->state;
     main_window_update_fields(gc->window,current);
 }
 
-void game_config_process_click(struct game_config* gc, int index,int button)
+void trexo_game_config_process_click(struct trexo_game_config* gc, int index,int button)
 {
     (void)button;
-    struct game_state* state = gc->state;
-
+    struct trexo_game_state* state = &g_array_index(gc->state_history,struct trexo_game_state,gc->current);
     if(!board_is_valid_move(&state->discs,index)){
         return;
     }
-    struct board child = state->discs;
+    struct trexo_board child = state->discs;
     board_do_move(&child,index);
-    game_config_on_any_move(gc,&child);
+    trexo_game_config_on_any_move(gc,&child);
     
-    game_config_show_updated_field(gc);
-}
-    
-
-struct player* game_config_get_player_to_move(struct game_config* gc)
-{
-  return &gc->players[gc->history[gc->current].turn];
+    trexo_game_config_show_updated_field(gc);
 }
 
-int game_config_timeout(struct game_config* gc)
-{
-  if(gc->type == GAME_TYPE_MATCH){
-    struct player* p = game_config_get_player_to_move(gc);
-    if(p->type != PLAYER_HUMAN){
-      struct game_state* s = game_config_get_state(gc);
-      if(!board_test_game_ended(&s->discs)){
-        struct board child;
-        player_do_move(p,&s->discs,&child);
-        game_config_on_any_move(gc,&child);
-      }
-    }
-  }
-  return G_SOURCE_CONTINUE;
-}
 
-void game_config_on_any_move(struct game_config* gc,const struct board* child)
+void trexo_game_config_on_any_move(struct trexo_game_config* gc,const struct board* child)
 {
-  struct game_state* s = game_config_get_state(gc);
+  struct trexo_game_state* s = trexo_game_config_get_state(gc);
+  // WARNING THIS DOESNT WORK WITH GARRAY
   (s+1)->discs = *child;
   (s+1)->turn = s->turn; 
   game_state_update_turn(s+1);
   gc->current = gc->redo_max = gc->current + 1;
-  game_config_show_updated_field(gc);
-  if(gc->players[0].type!=PLAYER_HUMAN && gc->players[1].type!=PLAYER_HUMAN){
-    game_state_print(s+1,stdout);
-  }
+  trexo_game_config_show_updated_field(gc);
   if(board_test_game_ended(&(s+1)->discs)){
-    game_config_on_ended(gc);
+    trexo_game_config_on_ended(gc);
   }
 }
 
 
 
-void game_config_redo_move(struct game_config* gc)
+void trexo_game_config_redo_move(struct trexo_game_config* gc)
 {
   int cur = gc->current + 1;
   while(cur < gc->redo_max){
@@ -84,7 +64,7 @@ void game_config_redo_move(struct game_config* gc)
   }
 }
 
-void game_config_undo_move(struct game_config* gc)
+void trexo_game_config_undo_move(struct trexo_game_config* gc)
 {
   int cur = gc->current -1;
   while(cur >= 0){
@@ -96,10 +76,10 @@ void game_config_undo_move(struct game_config* gc)
   }
 }
 
-void game_config_on_ended(const struct game_config* gc)
+void trexo_game_config_on_ended(const struct trexo_game_config* gc)
 {
   printf("%s","Game over!\n");
-  const struct game_state* s = game_config_get_state_const(gc);
+  const struct game_state* s = trexo_game_config_get_state_const(gc);
   int count[2];
   count[0] = uint64_count(s->turn ? s->discs.opp : s->discs.me);
   count[1] = uint64_count(s->turn ? s->discs.me : s->discs.opp);
@@ -114,35 +94,35 @@ void game_config_on_ended(const struct game_config* gc)
   }
 }
 
-struct game_state* game_config_get_state(struct game_config* gc)
+struct game_state* trexo_game_config_get_state(struct trexo_game_config* gc)
 {
   return &gc->history[gc->current];
 }
 
-const struct game_state* game_config_get_state_const(const struct game_config* gc)
+const struct game_state* trexo_game_config_get_state_const(const struct trexo_game_config* gc)
 {
   return &gc->history[gc->current];
 }
 
 
 
-void game_config_console_main(struct game_config* gc)
+void trexo_game_config_console_main(struct trexo_game_config* gc)
 {
   struct game_state *state,*next;
   
   while(1){
-    state = game_config_get_state(gc);
+    state = trexo_game_config_get_state(gc);
     if(board_test_game_ended(&state->discs)){
       break;
     }
     next = state + 1;
     struct player* p = gc->players + state->turn;
-    game_config_show_updated_field(gc);
+    trexo_game_config_show_updated_field(gc);
     player_do_move(p,&state->discs,&next->discs);
     gc->current = gc->redo_max = gc->current + 1;
     game_state_update_turn(next);
   }
-  game_config_on_ended(gc);
+  trexo_game_config_on_ended(gc);
 }
 
 
@@ -202,7 +182,7 @@ void game_state_switch_turn(struct game_state* gs)
   gs->turn = 1 - gs->turn;
 }
 
-void game_config_set_bot(struct game_config* gc, int colour, int depth, int perfect_depth)
+void trexo_game_config_set_bot(struct trexo_game_config* gc, int colour, int depth, int perfect_depth)
 {
   assert(colour==0 || colour==1);
   player_init(&gc->players[colour],gc->bot_type,depth,perfect_depth);
