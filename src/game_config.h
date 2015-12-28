@@ -10,25 +10,7 @@
 
 #include "board.h"
 #include "clickable_image.h"
-
-enum trexo_directions{
-    NEUTRAL = 0,
-    UP = 1,
-    DOWN = 2,
-    LEFT = 3,
-    RIGHT = 4
-};
-
-
-struct trexo_game_state{
-    struct trexo_board board;
-    int directions[TREXO_NUM_FIELDS];
-};
-
-
-void game_state_init(
-    struct trexo_game_state* gs
-);
+#include "game_state.h"
 
 void game_state_update_turn(
     struct trexo_game_state* gs
@@ -39,9 +21,7 @@ void game_state_print(
     FILE* file
 );
 
-void game_state_switch_turn(
-    struct trexo_game_state* gs
-);
+
 
 struct game_state* game_state_get_children(
     const struct trexo_game_state* gs,

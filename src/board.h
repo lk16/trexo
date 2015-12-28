@@ -8,33 +8,33 @@
 
 
 struct trexo_field{
-	int height,brick_id,is_x;
+    int height,brick_id,is_x;
 };
 
 void trexo_field_init(
-	struct trexo_field *field,
-	int height,
-	int brick_id,
-	int is_x
+    struct trexo_field *field,
+    int height,
+    int brick_id,
+    int is_x
 );
 
 // -------------------------------
 
 struct trexo_board{
-	struct trexo_field fields[TREXO_NUM_FIELDS];
-	int next_brick_id;
+    struct trexo_field fields[TREXO_NUM_FIELDS];
+    int next_brick_id;
 };
 
 void trexo_board_init(
-	struct trexo_board *board
+    struct trexo_board *board
 );
 
 void trexo_board_print(
-	const struct trexo_board *board
+    const struct trexo_board *board
 );
 
 void trexo_board_get_children(
-	struct trexo_board *board,
-	struct trexo_board *output_start,
-	struct trexo_board **output_end
+    struct trexo_board *board,
+    struct trexo_board *output_start,
+    struct trexo_board **output_end
 );
