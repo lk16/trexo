@@ -8,7 +8,7 @@ pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
 pkg_check_modules(GLIB REQUIRED glib-2.0)
 
 set(FLAGS
-	" -std=c99 -I -pthread -Wall -Wmissing-prototypes -Wstrict-prototypes -Wextra -Wfloat-equal -Wno-unused-result -Wshadow -Wstrict-aliasing -pipe"
+	" -fdiagnostics-color -std=c99 -I -pthread -Wall -Wmissing-prototypes -Wstrict-prototypes -Wextra -Wfloat-equal -Wno-unused-result -Wshadow -Wstrict-aliasing -pipe"
 )
 
 set(DEBUG_FLAGS "${FLAGS} -g")
