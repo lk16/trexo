@@ -25,7 +25,7 @@ void trexo_game_config_process_click(struct trexo_game_config* gc, int index,int
 {
     (void)button;
     struct trexo_game_state* state = &g_array_index(gc->state_history,struct trexo_game_state,gc->current);
-    if(!board_is_valid_move(&state->discs,index)){
+    if(!trexo_board_is_valid_move(&state->discs,index)){
         return;
     }
     struct trexo_board child = state->discs;

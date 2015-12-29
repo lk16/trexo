@@ -1,5 +1,10 @@
 CMakeCache.txt
-CMakeFiles/
+CMakeFiles/*
 Makefile
-cmake_install.cmake
+*.cmake
 trexo
+*.kdev4
+*.a
+*.so
+*.bak
+*~

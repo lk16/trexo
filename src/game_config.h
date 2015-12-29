@@ -12,6 +12,10 @@
 #include "clickable_image.h"
 #include "game_state.h"
 
+struct trexo_main_window;
+struct trexo_game_config;
+
+
 void game_state_update_turn(
     struct trexo_game_state* gs
 );
@@ -28,7 +32,7 @@ struct game_state* game_state_get_children(
     struct game_state* out
 );
 
-struct main_window;
+
 
 void main_window_update_fields(
     struct main_window*,
