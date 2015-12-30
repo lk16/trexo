@@ -5,7 +5,7 @@ void trexo_main_window_init(
 ){
     window->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_title(GTK_WINDOW(window->window),"Trexo");
-    gtk_window_set_default_size(GTK_WINDOW(window->window),400,400);
+    //gtk_window_set_default_size(GTK_WINDOW(window->window),400,400);
     g_signal_connect(window->window,"destroy",G_CALLBACK(gtk_main_quit),NULL);
     window->vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL,0);
     window->table = gtk_table_new(TREXO_FIELD_SIDE,TREXO_FIELD_SIDE,FALSE);
@@ -24,7 +24,7 @@ void trexo_main_window_table_init(
         for(y=0;y<TREXO_FIELD_SIDE;y++){
             clickable_image_init(
                 &window->images[x][y],
-                "./images/empty.png",
+                "./images/default/empty.png",
                 y*TREXO_FIELD_SIDE+x,
                 &window->config
             );
