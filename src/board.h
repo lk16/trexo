@@ -18,6 +18,11 @@ void trexo_field_init(
     int is_x
 );
 
+int trexo_field_is_valid_move(
+    const struct trexo_field *lhs,
+    const struct trexo_field *rhs
+);
+
 // -------------------------------
 
 struct trexo_board{
@@ -37,4 +42,15 @@ void trexo_board_get_children(
     struct trexo_board *board,
     struct trexo_board *output_start,
     struct trexo_board **output_end
+);
+
+int trexo_board_is_valid_move_first_half(
+    const struct trexo_board *board,
+    int field_index
+);
+
+int trexo_board_is_valid_move_second_half(
+    const struct trexo_board *board,
+    int first_field_id,
+    int second_field_id
 );

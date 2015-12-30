@@ -2,6 +2,8 @@
 
 #include <stdio.h>
 
+int main();
+
 int main(){
 
 	struct trexo_board board;

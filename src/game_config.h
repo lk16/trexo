@@ -12,44 +12,27 @@
 #include "clickable_image.h"
 #include "game_state.h"
 
-struct trexo_main_window;
+#define TREXO_MAX_MOVES (1000)
+
 struct trexo_game_config;
+struct trexo_main_window;   
 
-
-void game_state_update_turn(
-    struct trexo_game_state* gs
-);
-
-void game_state_print(
-    const struct trexo_game_state* gs,
-    FILE* file
+void trexo_main_window_update_fields(
+    struct trexo_main_window *window,
+    const struct trexo_game_state *state
 );
 
 
-
-struct game_state* game_state_get_children(
-    const struct trexo_game_state* gs,
-    struct game_state* out
-);
-
-
-
-void main_window_update_fields(
-    struct main_window*,
-    const struct trexo_game_state*
-);
 
 struct trexo_game_config{
-    //struct player players[2];
-    GArray *state_history;
+    struct trexo_game_state *history;
     int current,redo_max;
-    struct trexo_game_state *state;
-    struct main_window* window;
+    struct trexo_main_window* window;
 };
 
 void trexo_game_config_init(
     struct trexo_game_config* gc,
-    struct main_window* mw
+    struct trexo_main_window* mw
 );
 
 void trexo_game_config_on_new_game(
@@ -58,6 +41,14 @@ void trexo_game_config_on_new_game(
 
 void trexo_game_config_on_ended(
     const struct trexo_game_config* gc
+);
+
+void trexo_game_config_redo_move(
+    struct trexo_game_config *config
+);
+
+void trexo_game_config_undo_move(
+    struct trexo_game_config *config
 );
 
 void trexo_game_config_on_any_move(

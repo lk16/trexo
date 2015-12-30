@@ -178,3 +178,44 @@ void trexo_board_get_children(
 
     *output_end = output_start;
 }
+
+int trexo_field_is_valid_move(
+    const struct trexo_field *lhs,
+    const struct trexo_field *rhs
+){
+    return ((lhs->brick_id != rhs->brick_id) || (lhs->height == 0)) && (lhs->height == rhs->height);
+}
+
+
+
+
+int trexo_board_is_valid_move_first_half(
+    const struct trexo_board *board, 
+    int field_index 
+){
+    const struct trexo_field *move_field;
+    move_field = board->fields + field_index;
+    
+    const int last_row_start = TREXO_FIELD_SIDE * (TREXO_FIELD_SIDE-1);
+    const int field_index_column = field_index % TREXO_FIELD_SIDE;
+    
+    
+    return
+    ((field_index >= TREXO_FIELD_SIDE) && trexo_field_is_valid_move(move_field,move_field - TREXO_FIELD_SIDE))
+    || ((field_index < last_row_start) && trexo_field_is_valid_move(move_field,move_field + TREXO_FIELD_SIDE))
+    || ((field_index_column != 0) && trexo_field_is_valid_move(move_field, move_field - 1))
+    || ((field_index_column != (TREXO_FIELD_SIDE-1)) && trexo_field_is_valid_move(move_field, move_field + 1));
+}
+
+int trexo_board_is_valid_move_second_half(
+    const struct trexo_board *board,
+    int first_field_id, 
+    int second_field_id
+){
+    int diff = second_field_id - first_field_id;
+    diff = (diff > 0) ? diff : -diff;
+    if(diff != 1 && diff != TREXO_FIELD_SIDE){
+        return 0;
+    }
+    return trexo_field_is_valid_move(board->fields + first_field_id,board->fields + second_field_id);
+}

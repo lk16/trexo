@@ -28,6 +28,6 @@ void clickable_image_on_click(
   if(event->button.type==GDK_BUTTON_PRESS && 
     (event->button.button==LEFT_BUTTON || event->button.button==RIGHT_BUTTON)
   ){
-    game_config_process_click(ci->gc,ci->index,event->button.button);
+    trexo_game_config_process_click(ci->gc,ci->index,event->button.button);
   }
 }
