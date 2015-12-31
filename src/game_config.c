@@ -19,8 +19,8 @@ void trexo_game_config_init(
 void trexo_game_config_show_updated_field(
     const struct trexo_game_config* config
 ){
-    const struct trexo_game_state* state = config->history + config->current;
-    trexo_main_window_update_fields(config->window,state);
+    const struct trexo_board *board = config->history + config->current;
+    trexo_main_window_update_fields(config->window,board);
 }
 
 void trexo_game_config_process_click(
@@ -29,29 +29,18 @@ void trexo_game_config_process_click(
     int button
 ){
     (void)button;
-    struct trexo_game_state *state = config->history + config->current;
-    struct trexo_game_state *next = state + 1;
-    *next = *state;
-    if(state->first_half_index == -1){
-        if(!trexo_game_state_put_first_half(
-            next,
-            0,
-            index
-        )){
-            return;
-        }
+    struct trexo_board *board = config->history + config->current;
+    struct trexo_board *next = board + 1;
+    *next = *board;
+    
+    if(trexo_try_putting_half_brick(
+        next,
+        index,
+        0
+    )){
+        trexo_game_config_on_any_move(config,next);
+        trexo_game_config_show_updated_field(config);
     }
-    else{
-        if(!trexo_game_state_put_second_half(
-            next,
-            index
-        )){
-            return;
-        }
-    }
-
-    //trexo_game_config_on_any_move(config,next);
-    trexo_game_config_show_updated_field(config);
 }
 
 

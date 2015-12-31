@@ -53,3 +53,9 @@ int trexo_board_is_valid_move_second_half(
     int first_field_id,
     int second_field_id
 );
+
+int trexo_try_putting_half_brick(
+    struct trexo_board *board,
+    int field_index,
+    int is_x
+);

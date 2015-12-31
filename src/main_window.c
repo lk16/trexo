@@ -44,10 +44,10 @@ void trexo_main_window_table_init(
 
 void trexo_main_window_update_fields(
     struct trexo_main_window *window,
-    const struct trexo_game_state *state
+    const struct trexo_board *board
 ){
     (void)window;
-    (void)state;
+    (void)board;
     /*
       const char* imagefile;
       uint64_t black = (state->turn ? gs->discs.opp : gs->discs.me);

@@ -256,18 +256,10 @@ int trexo_board_is_valid_move_first_half(
     const struct trexo_board *board, 
     int field_index 
 ){
-    const struct trexo_field *move_field;
-    move_field = board->fields + field_index;
-    
-    const int last_row_start = TREXO_FIELD_SIDE * (TREXO_FIELD_SIDE-1);
-    const int field_index_column = field_index % TREXO_FIELD_SIDE;
-    
-    
-    return
-    ((field_index >= TREXO_FIELD_SIDE) && trexo_field_is_valid_move(move_field,move_field - TREXO_FIELD_SIDE))
-    || ((field_index < last_row_start) && trexo_field_is_valid_move(move_field,move_field + TREXO_FIELD_SIDE))
-    || ((field_index_column != 0) && trexo_field_is_valid_move(move_field, move_field - 1))
-    || ((field_index_column != (TREXO_FIELD_SIDE-1)) && trexo_field_is_valid_move(move_field, move_field + 1));
+    return trexo_board_is_valid_move_second_half(board,field_index,field_index+1)
+    || trexo_board_is_valid_move_second_half(board,field_index,field_index-1)
+    || trexo_board_is_valid_move_second_half(board,field_index,field_index+TREXO_FIELD_SIDE)
+    || trexo_board_is_valid_move_second_half(board,field_index,field_index-TREXO_FIELD_SIDE);
 }
 
 int trexo_board_is_valid_move_second_half(
@@ -275,9 +267,11 @@ int trexo_board_is_valid_move_second_half(
     int first_field_id, 
     int second_field_id
 ){
-    int diff = second_field_id - first_field_id;
-    diff = (diff > 0) ? diff : -diff;
-    if(diff != 1 && diff != TREXO_FIELD_SIDE){
+    int row_diff = (first_field_id/TREXO_FIELD_SIDE) - (second_field_id/TREXO_FIELD_SIDE);
+    int col_diff = (first_field_id%TREXO_FIELD_SIDE) - (second_field_id%TREXO_FIELD_SIDE);
+    row_diff = (row_diff > 0) ? row_diff : -row_diff;
+    col_diff = (col_diff > 0) ? col_diff : -col_diff;
+    if(col_diff != 1 && row_diff != 1){
         return 0;
     }
     return trexo_field_is_valid_move(board->fields + first_field_id,board->fields + second_field_id);

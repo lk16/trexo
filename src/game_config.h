@@ -13,7 +13,6 @@
 
 #include "board.h"
 #include "clickable_image.h"
-#include "game_state.h"
 
 #define TREXO_MAX_MOVES (1000)
 
@@ -22,13 +21,13 @@ struct trexo_main_window;
 
 void trexo_main_window_update_fields(
     struct trexo_main_window *window,
-    const struct trexo_game_state *state
+    const struct trexo_board *board
 );
 
 
 
 struct trexo_game_config{
-    struct trexo_game_state *history;
+    struct trexo_board *history;
     int current,redo_max;
     struct trexo_main_window* window;
 };
