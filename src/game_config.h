@@ -1,12 +1,15 @@
 #pragma once
 
 #include <assert.h>
+#include <malloc.h>
 #include <string.h>
 #include <stdio.h>
+
 
 #include <gtk/gtk.h>
 
 #include <glib.h>
+
 
 #include "board.h"
 #include "clickable_image.h"

@@ -17,7 +17,12 @@ void trexo_board_init(
     int i;
     board->next_brick_id = 1;
     for(i=0; i<TREXO_NUM_FIELDS; ++i){
-        trexo_field_init(board->fields + i, 0, board->next_brick_id - 1, 0);
+        trexo_field_init(
+            board->fields + i,
+            0,
+            board->next_brick_id - 1,
+            0
+        );
     }
 }
 
@@ -56,6 +61,70 @@ void trexo_board_print(
     }
     printf("%s","+\n");
     
+    // ---
+
+
+    printf("%s","\nheights:\n+-");
+    for(c=0; c<TREXO_FIELD_SIDE; ++c){
+        printf("%s","--");
+    }
+    printf("%s","+\n");
+
+    for(r=0; r<TREXO_FIELD_SIDE; ++r){
+        printf("%s","|");
+        for(c=0; c<TREXO_FIELD_SIDE; ++c){
+            field = board->fields + (r * TREXO_FIELD_SIDE) + c;
+            if(field->height == 0){
+                printf("%s","  ");
+            }
+            else{
+                printf(" %d",field->height);
+            }
+        }
+        printf("%s"," |\n");
+    }
+
+    printf("%s","+-");
+    for(c=0; c<TREXO_FIELD_SIDE; ++c){
+        printf("%s","--");
+    }
+    printf("%s","+\n");
+
+    printf("next_brick_id = %d\n",board->next_brick_id);
+
+    // ---
+
+
+    printf("%s","\nbrick_ids:\n+-");
+    for(c=0; c<TREXO_FIELD_SIDE; ++c){
+        printf("%s","--");
+    }
+    printf("%s","+\n");
+
+    for(r=0; r<TREXO_FIELD_SIDE; ++r){
+        printf("%s","|");
+        for(c=0; c<TREXO_FIELD_SIDE; ++c){
+            field = board->fields + (r * TREXO_FIELD_SIDE) + c;
+            if(field->brick_id == 0){
+                printf("%s","  ");
+            }
+            else{
+                printf(" %d",field->brick_id);
+            }
+        }
+        printf("%s"," |\n");
+    }
+
+    printf("%s","+-");
+    for(c=0; c<TREXO_FIELD_SIDE; ++c){
+        printf("%s","--");
+    }
+    printf("%s","+\n");
+
+    printf("next_brick_id = %d\n",board->next_brick_id);
+
+
+    printf("%s","\n\n=============================\n\n");
 }
 
 void trexo_board_get_children(
@@ -76,10 +145,7 @@ void trexo_board_get_children(
             left = board->fields + left_offset;   
             right = board->fields + right_offset;
 
-            if(
-                (left->height != right->height) 
-                || (left->height != 0 && left->brick_id == right->brick_id)
-            ){
+            if(!trexo_field_is_valid_move(left,right)){
                 continue;
             }
 
@@ -99,8 +165,8 @@ void trexo_board_get_children(
                 board->next_brick_id,
                 1
             );
+            ++output_start->next_brick_id;
             ++output_start;
-            ++board->next_brick_id;
 
             // X on the left
             *output_start = *board;
@@ -116,8 +182,8 @@ void trexo_board_get_children(
                 board->next_brick_id,
                 0
             );
+            ++output_start->next_brick_id;
             ++output_start;
-            ++board->next_brick_id;
         }
     }
 
@@ -131,10 +197,7 @@ void trexo_board_get_children(
             top = board->fields + top_offset;   
             bottom = board->fields + bottom_offset;
 
-            if(
-                (top->height != bottom->height) 
-                || (top->height != 0 && top->brick_id == bottom->brick_id)
-            ){
+            if(!trexo_field_is_valid_move(top,bottom)){
                 continue;
             }
 
@@ -154,8 +217,8 @@ void trexo_board_get_children(
                 board->next_brick_id,
                 1
             );
+            ++output_start->next_brick_id;
             ++output_start;
-            ++board->next_brick_id;
 
             // X on the top
             *output_start = *board;
@@ -171,8 +234,8 @@ void trexo_board_get_children(
                 board->next_brick_id,
                 0
             );
+            ++output_start->next_brick_id;
             ++output_start;
-            ++board->next_brick_id;
         }
     }
 

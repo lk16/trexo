@@ -1,9 +1,9 @@
 #include "game_config.h"
 
 void trexo_game_config_on_new_game(
-    struct trexo_game_config *gc
+    struct trexo_game_config *config
 ){
-   trexo_game_config_show_updated_field(gc);
+   trexo_game_config_show_updated_field(config);
 }
 
 void trexo_game_config_init(
@@ -12,6 +12,8 @@ void trexo_game_config_init(
 ){
     config->window = window;
     trexo_game_config_on_new_game(config);
+    config->current = config->redo_max = 0;
+    config->history = malloc((TREXO_MAX_MOVES+1) * sizeof(config->history));
 }
 
 void trexo_game_config_show_updated_field(
@@ -26,20 +28,30 @@ void trexo_game_config_process_click(
     int index,
     int button
 ){
-    (void)config;
     (void)button;
-    (void)index;
-    /*(void)button;
-    struct trexo_game_state* state = &g_array_index(gc->state_history,struct trexo_game_state,gc->current);
-    if(!trexo_board_is_valid_move(&state->discs,index)){
-        return;
+    struct trexo_game_state *state = config->history + config->current;
+    struct trexo_game_state *next = state + 1;
+    *next = *state;
+    if(state->first_half_index == -1){
+        if(!trexo_game_state_put_first_half(
+            next,
+            0,
+            index
+        )){
+            return;
+        }
     }
-    struct trexo_board child = state->discs;
-    board_do_move(&child,index);
-    trexo_game_config_on_any_move(gc,&child);
-    
-    trexo_game_config_show_updated_field(gc);*/
+    else{
+        if(!trexo_game_state_put_second_half(
+            next,
+            index
+        )){
+            return;
+        }
+    }
 
+    //trexo_game_config_on_any_move(config,next);
+    trexo_game_config_show_updated_field(config);
 }
 
 
