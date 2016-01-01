@@ -65,10 +65,10 @@ void trexo_main_window_update_fields(
             else if((i % TREXO_FIELD_SIDE < (TREXO_FIELD_SIDE - 1)) && field->brick_id == board->fields[i+1].brick_id){
                 snprintf(imagefile,sizeof(imagefile),"%s/%c_right.png",TREXO_IMAGE_PATH,xo);    
             }
-            else if((i / TREXO_FIELD_SIDE > 0) && field->brick_id == board->fields[i - TREXO_NUM_FIELDS].brick_id){
+            else if((i / TREXO_FIELD_SIDE > 0) && field->brick_id == board->fields[i - TREXO_FIELD_SIDE].brick_id){
                 snprintf(imagefile,sizeof(imagefile),"%s/%c_up.png",TREXO_IMAGE_PATH,xo);    
             }
-            else if((i / TREXO_FIELD_SIDE < (TREXO_FIELD_SIDE - 1)) && field->brick_id == board->fields[i + TREXO_NUM_FIELDS].brick_id){
+            else if((i / TREXO_FIELD_SIDE < (TREXO_FIELD_SIDE - 1)) && field->brick_id == board->fields[i + TREXO_FIELD_SIDE].brick_id){
                 snprintf(imagefile,sizeof(imagefile),"%s/%c_down.png",TREXO_IMAGE_PATH,xo);    
             }
             else{
