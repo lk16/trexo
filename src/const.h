@@ -16,3 +16,5 @@
 #endif
 
 #define TREXO_IMAGE_PATH "./images/default"
+
+#define TREXO_HISTORY_SIZE (1000)

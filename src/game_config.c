@@ -13,7 +13,7 @@ void trexo_game_config_init(
 ){
     config->window = window;
     config->current = config->redo_max = 0;
-    config->history = malloc((TREXO_MAX_MOVES+1) * sizeof(config->history));
+    config->history = malloc((TREXO_HISTORY_SIZE+1) * sizeof(*config->history));
     trexo_game_config_on_new_game(config);
 }
 
