@@ -75,7 +75,7 @@ void trexo_main_window_update_fields(
                 snprintf(imagefile,sizeof(imagefile),"%s/%c_neutral.png",TREXO_IMAGE_PATH,xo);        
             }
         }
-        GtkWidget* im = window->images[i % TREXO_FIELD_SIDE][i / TREXO_FIELD_SIDE].image;
+        GtkWidget *im = window->images[i % TREXO_FIELD_SIDE][i / TREXO_FIELD_SIDE].image;
         gtk_image_set_from_file(GTK_IMAGE(im),imagefile);
       }
 }

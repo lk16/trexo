@@ -1,8 +1,8 @@
 #include "clickable_image.h"
 
 void clickable_image_init(
-    struct clickable_image* ci, 
-    const char* file,
+    struct clickable_image *ci, 
+    const char *file,
     int index,
     struct trexo_game_config* gc
 ){
@@ -22,7 +22,7 @@ void game_config_process_click(struct trexo_game_config*,int,int);
 void clickable_image_on_click(
     GtkWidget *widget,
     GdkEvent *event,
-    struct clickable_image* ci
+    struct clickable_image *ci
 ){
     (void)widget;
     if(event->button.type==GDK_BUTTON_PRESS && 
