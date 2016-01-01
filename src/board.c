@@ -281,19 +281,14 @@ bool trexo_board_is_valid_move_second_half(
 int trexo_board_get_unfinished_brick_field_id(
     const struct trexo_board *board
 ){
-    int last_id = board->next_brick_id - 1;
-    if(last_id == 0){
-        // corner case: no bricks -> no halfs
-        return -1;
-    }
-    int field_id = 0;
+    int field_id = -1;
     for(int i=0; i<TREXO_NUM_FIELDS; ++i){
-        if(board->fields[i].brick_id == last_id){
-            if(field_id == 0){
+        if(board->fields[i].brick_id == board->next_brick_id){
+            if(field_id == -1){
                 field_id = i;
             }
             else{
-                return 0;
+                return -1;
             }
         }
     }
@@ -313,7 +308,6 @@ bool trexo_board_try_putting_half_brick(
         ++board->fields[field_index].height;
         board->fields[field_index].brick_id = board->next_brick_id;
         board->fields[field_index].is_x = is_x;
-        ++board->next_brick_id;
     }
     else{
         if(!trexo_board_is_valid_move_second_half(board,unfinished_id,field_index)){
@@ -322,6 +316,7 @@ bool trexo_board_try_putting_half_brick(
         ++board->fields[field_index].height;
         board->fields[field_index].brick_id = board->next_brick_id;
         board->fields[field_index].is_x = !board->fields[unfinished_id].is_x;
+        ++board->next_brick_id;
     }
     return TRUE;
 }
