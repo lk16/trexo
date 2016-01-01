@@ -34,13 +34,19 @@ void trexo_game_config_process_click(
     struct trexo_board *next = board + 1;
     *next = *board;
     
-    if(trexo_board_try_putting_half_brick(
-        next,
-        index,
-        0
-    )){
-        trexo_game_config_show_updated_field(config);
+    if(button == 3){
+        // RIGHT BUTTON
+        trexo_game_config_undo_move(config);
     }
+    else if(button == 1){
+        // LEFT BUTTON
+        if(trexo_board_try_putting_half_brick(next,index,0)){
+            ++config->current;
+            config->redo_max = config->current;
+        }
+    }
+    trexo_board_print(config->history + config->current);
+    trexo_game_config_show_updated_field(config);
 }
 
 void trexo_game_config_redo_move(
@@ -55,8 +61,8 @@ void trexo_game_config_redo_move(
 void trexo_game_config_undo_move(
     struct trexo_game_config *config
 ){
-    int cur = config->current -1;
-    while(cur >= 0){
+    int cur = config->current - 1;
+    if(cur >= 0){
         config->current = cur;
     }
 }

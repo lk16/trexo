@@ -65,7 +65,7 @@ bool trexo_board_try_putting_half_brick(
     int is_x
 );
 
-// returns field_id of unfinished (half) brick if any, else 0
+// returns field_id of unfinished (half) brick if any, else -1
 int trexo_board_get_unfinished_brick_field_id(
     const struct trexo_board *board
 );

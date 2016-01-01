@@ -256,25 +256,26 @@ bool trexo_board_is_valid_move_first_half(
     const struct trexo_board *board, 
     int field_index 
 ){
-    return trexo_board_is_valid_move_second_half(board,field_index,field_index+1)
-    || trexo_board_is_valid_move_second_half(board,field_index,field_index-1)
-    || trexo_board_is_valid_move_second_half(board,field_index,field_index+TREXO_FIELD_SIDE)
-    || trexo_board_is_valid_move_second_half(board,field_index,field_index-TREXO_FIELD_SIDE);
+    (void)board;
+    (void)field_index;
+    // We just pretend every first half is valid
+    // If there is no valid second half, the user will get stuck here and has to undo
+    return TRUE;
 }
 
 bool trexo_board_is_valid_move_second_half(
     const struct trexo_board *board,
     int first_field_id, 
-    int second_field_id
+    int second_field_id 
 ){
     int row_diff = (first_field_id/TREXO_FIELD_SIDE) - (second_field_id/TREXO_FIELD_SIDE);
     int col_diff = (first_field_id%TREXO_FIELD_SIDE) - (second_field_id%TREXO_FIELD_SIDE);
     row_diff = (row_diff > 0) ? row_diff : -row_diff;
     col_diff = (col_diff > 0) ? col_diff : -col_diff;
-    if(col_diff != 1 && row_diff != 1){
-        return 0;
+    if((col_diff == 1 && row_diff == 0) || (col_diff == 0 && row_diff == 1)){
+        return board->fields[second_field_id].height == board->fields[first_field_id].height - 1;
     }
-    return trexo_field_is_valid_move(board->fields + first_field_id,board->fields + second_field_id);
+    return 0;
 }
 
 int trexo_board_get_unfinished_brick_field_id(
@@ -283,7 +284,7 @@ int trexo_board_get_unfinished_brick_field_id(
     int last_id = board->next_brick_id - 1;
     if(last_id == 0){
         // corner case: no bricks -> no halfs
-        return 0;
+        return -1;
     }
     int field_id = 0;
     for(int i=0; i<TREXO_NUM_FIELDS; ++i){
@@ -305,7 +306,7 @@ bool trexo_board_try_putting_half_brick(
     int is_x
 ){
     int unfinished_id = trexo_board_get_unfinished_brick_field_id(board);
-    if(unfinished_id == 0){
+    if(unfinished_id == -1){
         if(!trexo_board_is_valid_move_first_half(board,field_index)){
             return FALSE;
         }
