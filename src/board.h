@@ -2,9 +2,7 @@
 
 #include <stdio.h>
 
-#define TREXO_FIELD_SIDE 6
-#define TREXO_NUM_FIELDS (TREXO_FIELD_SIDE * TREXO_FIELD_SIDE)
-#define TREXO_MAX_CHILDREN (4 * TREXO_FIELD_SIDE * (TREXO_FIELD_SIDE - 1))
+#include "const.h"
 
 struct trexo_field{
     int height,brick_id,is_x;
@@ -33,29 +31,41 @@ void trexo_board_init(
     struct trexo_board *board
 );
 
+// print to stdout
 void trexo_board_print(
     const struct trexo_board *board
 );
 
+// put children in output_start
+// makes output_end point to one past the last child
 void trexo_board_get_children(
     struct trexo_board *board,
     struct trexo_board *output_start,
     struct trexo_board **output_end
 );
 
-int trexo_board_is_valid_move_first_half(
+// returns TRUE if move is valid 
+bool trexo_board_is_valid_move_first_half(
     const struct trexo_board *board,
     int field_index
 );
 
-int trexo_board_is_valid_move_second_half(
+// returns TRUE if move is valid 
+bool trexo_board_is_valid_move_second_half(
     const struct trexo_board *board,
     int first_field_id,
     int second_field_id
 );
 
-int trexo_try_putting_half_brick(
+// returns TRUE if this move is valid 
+// when FALSE is returned, board is not modified
+bool trexo_board_try_putting_half_brick(
     struct trexo_board *board,
     int field_index,
     int is_x
+);
+
+// returns field_id of unfinished (half) brick if any, else 0
+int trexo_board_get_unfinished_brick_field_id(
+    const struct trexo_board *board
 );

@@ -242,7 +242,7 @@ void trexo_board_get_children(
     *output_end = output_start;
 }
 
-int trexo_field_is_valid_move(
+bool trexo_field_is_valid_move(
     const struct trexo_field *lhs,
     const struct trexo_field *rhs
 ){
@@ -252,7 +252,7 @@ int trexo_field_is_valid_move(
 
 
 
-int trexo_board_is_valid_move_first_half(
+bool trexo_board_is_valid_move_first_half(
     const struct trexo_board *board, 
     int field_index 
 ){
@@ -262,7 +262,7 @@ int trexo_board_is_valid_move_first_half(
     || trexo_board_is_valid_move_second_half(board,field_index,field_index-TREXO_FIELD_SIDE);
 }
 
-int trexo_board_is_valid_move_second_half(
+bool trexo_board_is_valid_move_second_half(
     const struct trexo_board *board,
     int first_field_id, 
     int second_field_id
@@ -275,4 +275,52 @@ int trexo_board_is_valid_move_second_half(
         return 0;
     }
     return trexo_field_is_valid_move(board->fields + first_field_id,board->fields + second_field_id);
+}
+
+int trexo_board_get_unfinished_brick_field_id(
+    const struct trexo_board *board
+){
+    int last_id = board->next_brick_id - 1;
+    if(last_id == 0){
+        // corner case: no bricks -> no halfs
+        return 0;
+    }
+    int field_id = 0;
+    for(int i=0; i<TREXO_NUM_FIELDS; ++i){
+        if(board->fields[i].brick_id == last_id){
+            if(field_id == 0){
+                field_id = i;
+            }
+            else{
+                return 0;
+            }
+        }
+    }
+    return field_id;
+}
+
+bool trexo_board_try_putting_half_brick(
+    struct trexo_board *board,
+    int field_index,
+    int is_x
+){
+    int unfinished_id = trexo_board_get_unfinished_brick_field_id(board);
+    if(unfinished_id == 0){
+        if(!trexo_board_is_valid_move_first_half(board,field_index)){
+            return FALSE;
+        }
+        ++board->fields[field_index].height;
+        board->fields[field_index].brick_id = board->next_brick_id;
+        board->fields[field_index].is_x = is_x;
+        ++board->next_brick_id;
+    }
+    else{
+        if(!trexo_board_is_valid_move_second_half(board,unfinished_id,field_index)){
+            return FALSE;
+        }
+        ++board->fields[field_index].height;
+        board->fields[field_index].brick_id = board->next_brick_id;
+        board->fields[field_index].is_x = !board->fields[unfinished_id].is_x;
+    }
+    return TRUE;
 }

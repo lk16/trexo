@@ -5,7 +5,6 @@ void trexo_main_window_init(
 ){
     window->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_title(GTK_WINDOW(window->window),"Trexo");
-    //gtk_window_set_default_size(GTK_WINDOW(window->window),400,400);
     g_signal_connect(window->window,"destroy",G_CALLBACK(gtk_main_quit),NULL);
     window->vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL,0);
     window->table = gtk_table_new(TREXO_FIELD_SIDE,TREXO_FIELD_SIDE,FALSE);
@@ -46,37 +45,39 @@ void trexo_main_window_update_fields(
     struct trexo_main_window *window,
     const struct trexo_board *board
 ){
-    (void)window;
-    (void)board;
-    /*
-      const char* imagefile;
-      uint64_t black = (state->turn ? gs->discs.opp : gs->discs.me);
-      uint64_t white = (gs->turn ? gs->discs.me : gs->discs.opp);
-      
-      
-      int i;
-      for(i=0;i<64;i++){
-        if(white & uint64_set[i]){
-          imagefile = "./images/white.png";
-        }
-        else if(black & uint64_set[i]){
-          imagefile = "./images/black.png";
-        }
-        else if(board_is_valid_move(&gs->discs,i)){
-          if(gs->turn){
-            imagefile = "./images/move_white.png";
-          }
-          else{
-            imagefile = "./images/move_black.png";
-          }
+    char imagefile[80];
+    const struct trexo_field *field;
+
+    char xo;
+
+    for(int i=0; i<TREXO_NUM_FIELDS; i++){
+        strncpy(imagefile,TREXO_IMAGE_PATH,sizeof(imagefile));
+        field = board->fields + i;
+        if(field->height == 0){
+            snprintf(imagefile,sizeof(imagefile),"%s/empty.png",TREXO_IMAGE_PATH);
         }
         else{
-          imagefile = "./images/empty.png";
+            xo = field->is_x ? 'x' : 'o';
+
+            if((i % TREXO_FIELD_SIDE > 0) && field->brick_id == board->fields[i-1].brick_id){
+                snprintf(imagefile,sizeof(imagefile),"%s/%c_left.png",TREXO_IMAGE_PATH,xo);    
+            }
+            else if((i % TREXO_FIELD_SIDE < (TREXO_FIELD_SIDE - 1)) && field->brick_id == board->fields[i+1].brick_id){
+                snprintf(imagefile,sizeof(imagefile),"%s/%c_right.png",TREXO_IMAGE_PATH,xo);    
+            }
+            else if((i / TREXO_FIELD_SIDE > 0) && field->brick_id == board->fields[i - TREXO_NUM_FIELDS].brick_id){
+                snprintf(imagefile,sizeof(imagefile),"%s/%c_up.png",TREXO_IMAGE_PATH,xo);    
+            }
+            else if((i / TREXO_FIELD_SIDE < (TREXO_FIELD_SIDE - 1)) && field->brick_id == board->fields[i + TREXO_NUM_FIELDS].brick_id){
+                snprintf(imagefile,sizeof(imagefile),"%s/%c_down.png",TREXO_IMAGE_PATH,xo);    
+            }
+            else{
+                snprintf(imagefile,sizeof(imagefile),"%s/%c_neutral.png",TREXO_IMAGE_PATH,xo);        
+            }
         }
-        GtkWidget* im = mw->images[i%8][i/8].image;
+        GtkWidget* im = window->images[i % TREXO_FIELD_SIDE][i / TREXO_FIELD_SIDE].image;
         gtk_image_set_from_file(GTK_IMAGE(im),imagefile);
       }
-    */
 }
 
 

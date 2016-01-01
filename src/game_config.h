@@ -53,11 +53,6 @@ void trexo_game_config_undo_move(
     struct trexo_game_config *config
 );
 
-void trexo_game_config_on_any_move(
-    struct trexo_game_config* gc,
-    const struct trexo_board* child
-);
-
 void trexo_game_config_show_updated_field(
     const struct trexo_game_config* gc
 );
