@@ -320,3 +320,69 @@ bool trexo_board_try_putting_half_brick(
     }
     return TRUE;
 }
+
+void trexo_child_generator_init(
+    struct trexo_child_generator *gen
+){
+    gen->next_field_id = 0;
+    gen->next_dir = TREXO_MIN_DIR;
+}
+
+void trexo_child_generator_advance(
+    struct trexo_child_generator *gen
+){
+    if(gen->next_dir == TREXO_MAX_DIR){
+        gen->next_dir = TREXO_MIN_DIR;
+        ++gen->next_field_id;
+    }
+    else{
+        ++gen->next_dir;
+    }
+}
+
+bool trexo_child_generator_next(
+    struct trexo_child_generator *gen,
+    const struct trexo_board *parent,
+    struct trexo_board *child
+){
+    // x goes in next_field_id
+    // o goes in the neighbour determined by next_dir
+
+    if(gen->next_field_id == TREXO_NUM_FIELDS){
+        return FALSE;
+    }
+
+    do{
+        switch(gen->next_dir){
+            case TREXO_LEFT:
+                if(gen->next_field_id % TREXO_FIELD_SIDE == 0){
+                    trexo_child_generator_advance(gen);
+                }
+                break;
+            case TREXO_RIGHT:
+                if(gen->next_field_id % TREXO_FIELD_SIDE == TREXO_FIELD_SIDE - 1){
+                    trexo_child_generator_advance(gen);
+                }
+                break;
+            case TREXO_UP:
+                if(gen->next_field_id / TREXO_FIELD_SIDE == 0){
+                    trexo_child_generator_advance(gen);
+                }            
+                break;
+            case TREXO_DOWN:
+                if(gen->next_field_id % TREXO_FIELD_SIDE == TREXO_FIELD_SIDE - 1){
+                    trexo_child_generator_advance(gen);
+                }
+                break;
+        }
+    }while(FALSE);
+
+    
+
+
+    *child = *parent;
+    // TODO init child
+
+    trexo_child_generator_advance(gen);
+    return TRUE;
+}

@@ -19,7 +19,11 @@
 
 #define TREXO_HISTORY_SIZE (1000)
 
-#define TREXO_LEFT (0)
-#define TREXO_RIGHT (TREXO_LEFT+1)
-#define TREXO_UP (TREXO_RIGHT+1)
-#define TREXO_DOWN (TREXO_DOWN+1)
+enum trexo_direction{
+    TREXO_LEFT = 0,
+    TREXO_RIGHT = 1,
+    TREXO_UP = 2,
+    TREXO_DOWN = 3,
+    TREXO_MAX_DIR = TREXO_DOWN,
+    TREXO_MIN_DIR = TREXO_LEFT
+};

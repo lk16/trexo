@@ -74,5 +74,20 @@ int trexo_board_get_unfinished_brick_field_id(
 
 struct trexo_child_generator{
     int next_field_id;
-
+    enum trexo_direction next_dir;
 };
+
+void trexo_child_generator_init(
+    struct trexo_child_generator *gen
+);
+
+// returns whether there is a next child
+bool trexo_child_generator_next(
+    struct trexo_child_generator *gen,
+    const struct trexo_board *parent,
+    struct trexo_board *child
+);
+
+void trexo_child_generator_advance(
+    struct trexo_child_generator *gen
+);
