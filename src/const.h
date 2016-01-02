@@ -1,6 +1,6 @@
 #pragma once
 
-#define TREXO_FIELD_SIDE (10)
+#define TREXO_FIELD_SIDE (6)
 
 #define TREXO_NUM_FIELDS (TREXO_FIELD_SIDE * TREXO_FIELD_SIDE)
 
@@ -18,3 +18,8 @@
 #define TREXO_IMAGE_PATH "./images/default"
 
 #define TREXO_HISTORY_SIZE (1000)
+
+#define TREXO_LEFT (0)
+#define TREXO_RIGHT (TREXO_LEFT+1)
+#define TREXO_UP (TREXO_RIGHT+1)
+#define TREXO_DOWN (TREXO_DOWN+1)
