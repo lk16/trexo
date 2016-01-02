@@ -1,6 +1,6 @@
 #pragma once
 
-#define TREXO_FIELD_SIDE (4)
+#define TREXO_FIELD_SIDE (3)
 
 #define TREXO_NUM_FIELDS (TREXO_FIELD_SIDE * TREXO_FIELD_SIDE)
 

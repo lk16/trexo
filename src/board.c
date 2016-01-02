@@ -1,13 +1,5 @@
 #include "board.h"
 
-const int trexo_direction_diff[4] = {
-    -1,
-    1,
-    -TREXO_FIELD_SIDE,
-    TREXO_FIELD_SIDE
-};
-
-
 void trexo_field_init(
     struct trexo_field *field,
     int height,
@@ -68,7 +60,8 @@ void trexo_board_print(
         printf("%s","--");
     }
     printf("%s","+\n");
-    
+
+#if 0    
     // ---
 
 
@@ -133,6 +126,7 @@ void trexo_board_print(
 
 
     printf("%s","\n\n=============================\n\n");
+#endif
 }
 
 void trexo_board_get_children(
@@ -332,7 +326,7 @@ bool trexo_board_try_putting_half_brick(
 void trexo_child_generator_init(
     struct trexo_child_generator *gen
 ){
-    gen->next_field_id = -1;
+    gen->next_field_id = 0;
     gen->next_dir = TREXO_MIN_DIR;
 }
 
@@ -360,47 +354,68 @@ bool trexo_child_generator_next(
         return FALSE;
     }
 
+    bool ok;
     do{
+        ok = TRUE;
         switch(gen->next_dir){
             case TREXO_LEFT:
                 if(gen->next_field_id % TREXO_FIELD_SIDE == 0){
                     trexo_child_generator_advance(gen);
+                    ok = FALSE;
                 }
                 break;
             case TREXO_RIGHT:
                 if(gen->next_field_id % TREXO_FIELD_SIDE == TREXO_FIELD_SIDE - 1){
                     trexo_child_generator_advance(gen);
+                    ok = FALSE;
                 }
                 break;
             case TREXO_UP:
                 if(gen->next_field_id / TREXO_FIELD_SIDE == 0){
                     trexo_child_generator_advance(gen);
+                    ok = FALSE;
                 }            
                 break;
             case TREXO_DOWN:
-                if(gen->next_field_id % TREXO_FIELD_SIDE == TREXO_FIELD_SIDE - 1){
+                if(gen->next_field_id / TREXO_FIELD_SIDE == TREXO_FIELD_SIDE - 1){
                     trexo_child_generator_advance(gen);
+                    ok = FALSE;
                 }
                 break;
         }
-    }while(FALSE);
+    }while(!ok);
 
     
-
+    printf("%d %d\n",gen->next_field_id,gen->next_dir);
 
     *child = *parent;
     
-    struct trexo_field *field = child->fields + gen->next_field_id;
+    struct trexo_field *field,*neighbour;
 
+    field = child->fields + gen->next_field_id;
     ++field->height;
     field->brick_id = child->next_brick_id;
     field->is_x = TRUE;
 
-    child += trexo_direction_diff[gen->next_dir];
+    switch(gen->next_dir){
+        case TREXO_LEFT:
+            neighbour = field - 1;
+            break;
+        case TREXO_RIGHT:
+            neighbour = field + 1;
+            break;
+        case TREXO_UP:
+            neighbour = field - TREXO_FIELD_SIDE;
+            break;
+        case TREXO_DOWN:
+            neighbour = field + TREXO_FIELD_SIDE;
+            break;
+    }
+    
 
-    ++field->height;
-    field->brick_id = child->next_brick_id;
-    field->is_x = FALSE;
+    ++neighbour->height;
+    neighbour->brick_id = child->next_brick_id;
+    neighbour->is_x = FALSE;
 
     ++child->next_brick_id;
 

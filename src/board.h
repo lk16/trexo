@@ -13,8 +13,6 @@ enum trexo_direction{
     TREXO_MAX_DIR = TREXO_DOWN
 };
 
-extern const int trexo_direction_diff[4];
-
 // ------------------------------
 
 struct trexo_field{
