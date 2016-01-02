@@ -1,5 +1,13 @@
 #include "board.h"
 
+const int trexo_direction_diff[4] = {
+    -1,
+    1,
+    -TREXO_FIELD_SIDE,
+    TREXO_FIELD_SIDE
+};
+
+
 void trexo_field_init(
     struct trexo_field *field,
     int height,
@@ -324,7 +332,7 @@ bool trexo_board_try_putting_half_brick(
 void trexo_child_generator_init(
     struct trexo_child_generator *gen
 ){
-    gen->next_field_id = 0;
+    gen->next_field_id = -1;
     gen->next_dir = TREXO_MIN_DIR;
 }
 
@@ -348,7 +356,7 @@ bool trexo_child_generator_next(
     // x goes in next_field_id
     // o goes in the neighbour determined by next_dir
 
-    if(gen->next_field_id == TREXO_NUM_FIELDS){
+    if((gen->next_field_id == TREXO_NUM_FIELDS - 1) && (gen->next_dir == TREXO_MAX_DIR)){
         return FALSE;
     }
 
@@ -381,7 +389,20 @@ bool trexo_child_generator_next(
 
 
     *child = *parent;
-    // TODO init child
+    
+    struct trexo_field *field = child->fields + gen->next_field_id;
+
+    ++field->height;
+    field->brick_id = child->next_brick_id;
+    field->is_x = TRUE;
+
+    child += trexo_direction_diff[gen->next_dir];
+
+    ++field->height;
+    field->brick_id = child->next_brick_id;
+    field->is_x = FALSE;
+
+    ++child->next_brick_id;
 
     trexo_child_generator_advance(gen);
     return TRUE;

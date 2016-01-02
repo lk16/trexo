@@ -4,6 +4,19 @@
 
 #include "const.h"
 
+enum trexo_direction{
+    TREXO_LEFT = 0,
+    TREXO_RIGHT = 1,
+    TREXO_UP = 2,
+    TREXO_DOWN = 3,
+    TREXO_MIN_DIR = TREXO_LEFT,
+    TREXO_MAX_DIR = TREXO_DOWN
+};
+
+extern const int trexo_direction_diff[4];
+
+// ------------------------------
+
 struct trexo_field{
     int height,brick_id,is_x;
 };
@@ -71,6 +84,8 @@ int trexo_board_get_unfinished_brick_field_id(
 );
 
 // -----------------
+
+
 
 struct trexo_child_generator{
     int next_field_id;
