@@ -43,6 +43,9 @@ void bits##SIZE##_init(struct bits##SIZE *bits);\
 void bits##SIZE##_clear(struct bits##SIZE *bits);\
 void bits##SIZE##_copy(const struct bits##SIZE *bits,struct bits##SIZE *copy);\
 bool bits##SIZE##_test(const struct bits##SIZE *bits,unsigned offset);\
+void bits##SIZE##_set(struct bits##SIZE *bits,unsigned offset);\
+void bits##SIZE##_reset(struct bits##SIZE *bits,unsigned offset);\
+void bits##SIZE##_assign_bit(struct bits##SIZE *bits,unsigned offset,bool bit);\
 unsigned bits##SIZE_count(const struct bits##SIZE *bits);\
 bool bits##SIZE_equals(const struct bits##SIZE *lhs,const struct bits##SIZE *rhs);\
 void bits##SIZE##_test_validity(const struct bits##SIZE *bits);\
@@ -163,15 +166,32 @@ void bits##SIZE##_not(struct bits##SIZE *bits){\
     }\
     bits##SIZE##_test_validity(bits);\
 }\
-void bits##SIZE##compound_or(struct bits##SIZE *lhs,const struct bits##SIZE *rhs){\
+void bits##SIZE##_compound_or(struct bits##SIZE *lhs,const struct bits##SIZE *rhs){\
     bits##SIZE##_or(lhs,rhs,lhs);\
 }\
-void bits##SIZE##compound_and(struct bits##SIZE *lhs,const struct bits##SIZE *rhs){\
+void bits##SIZE##_compound_and(struct bits##SIZE *lhs,const struct bits##SIZE *rhs){\
     bits##SIZE##_and(lhs,rhs,lhs);\
 }\
-void bits##SIZE##compound_xor(struct bits##SIZE *lhs,const struct bits##SIZE *rhs){\
+void bits##SIZE##_compound_xor(struct bits##SIZE *lhs,const struct bits##SIZE *rhs){\
     bits##SIZE##_xor(lhs,rhs,lhs);\
+}\
+void bits##SIZE##_set(struct bits##SIZE *bits,unsigned offset){\
+    assert(offset < SIZE);\
+    bits##SIZE##_test_validity(bits);\
+    bits->data[offset/64] |= uint64_set[offset%64];\
+}\
+void bits##SIZE##_reset(struct bits##SIZE *bits,unsigned offset){\
+    assert(offset < SIZE);\
+    bits##SIZE##_test_validity(bits);\
+    bits->data[offset/64] &= uint64_reset[offset%64];\
+}\
+void bits##SIZE##_assign_bit(struct bits##SIZE *bits,unsigned offset,bool bit){\
+    if(bit){\
+        bits##SIZE##_set(bits,offset);\
+    }\
+    else{\
+        bits##SIZE##_reset(bits,offset);\
+    }\
 }
-
 
 BITSET_DECLARE(235);
