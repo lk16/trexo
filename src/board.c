@@ -385,9 +385,6 @@ bool trexo_child_generator_next(
         }
     }while(!ok);
 
-    
-    printf("%d %d\n",gen->next_field_id,gen->next_dir);
-
     *child = *parent;
     
     struct trexo_field *field,*neighbour;
