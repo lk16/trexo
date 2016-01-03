@@ -36,12 +36,6 @@ unsigned uint64_only_bit_index(uint64_t b){
     return table[b%83];
 }
 
-
-BITSET_DEFINE(235);
-
-
-
-
 const uint64_t uint64_set[64] = {
     (1ull << 0),
     (1ull << 1),
