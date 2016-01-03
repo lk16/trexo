@@ -45,7 +45,16 @@ void bits##SIZE##_copy(const struct bits##SIZE *bits,struct bits##SIZE *copy);\
 bool bits##SIZE##_test(const struct bits##SIZE *bits,unsigned offset);\
 unsigned bits##SIZE_count(const struct bits##SIZE *bits);\
 bool bits##SIZE_equals(const struct bits##SIZE *lhs,const struct bits##SIZE *rhs);\
-void bits##SIZE##_test_validity(const struct bits##SIZE *bits);
+void bits##SIZE##_test_validity(const struct bits##SIZE *bits);\
+void bits##SIZE##_or(const struct bits##SIZE *lhs,const struct bits##SIZE *rhs,struct bits##SIZE *out);\
+void bits##SIZE##_and(const struct bits##SIZE *lhs,const struct bits##SIZE *rhs,struct bits##SIZE *out);\
+void bits##SIZE##_xor(const struct bits##SIZE *lhs,const struct bits##SIZE *rhs,struct bits##SIZE *out);\
+void bits##SIZE##_not(struct bits##SIZE *bits);\
+void bits##SIZE##compound_or(struct bits##SIZE *lhs,const struct bits##SIZE *rhs);\
+void bits##SIZE##compound_and(struct bits##SIZE *lhs,const struct bits##SIZE *rhs);\
+void bits##SIZE##compound_xor(struct bits##SIZE *lhs,const struct bits##SIZE *rhs);
+
+
 
 
 #ifdef NDEBUG
@@ -112,8 +121,57 @@ bool bits##SIZE_equals(const struct bits##SIZE *lhs,const struct bits##SIZE *rhs
     bits##SIZE##_test_validity(lhs);\
     bits##SIZE##_test_validity(rhs);\
     return memcmp(lhs,rhs,sizeof(*lhs)) == 0;\
+}\
+void bits##SIZE##_or(const struct bits##SIZE *lhs,const struct bits##SIZE *rhs,struct bits##SIZE *out){\
+    out->data[SIZE/64] = 0ull;\
+    bits##SIZE##_test_validity(lhs);\
+    bits##SIZE##_test_validity(rhs);\
+    bits##SIZE##_test_validity(out);\
+    for(int i=0; i < 1+((SIZE-1)/64); ++i){\
+        out->data[i] = lhs->data[i] | rhs->data[i];\
+    }\
+    bits##SIZE##_test_validity(out);\
+}\
+void bits##SIZE##_and(const struct bits##SIZE *lhs,const struct bits##SIZE *rhs,struct bits##SIZE *out){\
+    out->data[SIZE/64] = 0ull;\
+    bits##SIZE##_test_validity(lhs);\
+    bits##SIZE##_test_validity(rhs);\
+    bits##SIZE##_test_validity(out);\
+    for(int i=0; i < 1+((SIZE-1)/64); ++i){\
+        out->data[i] = lhs->data[i] & rhs->data[i];\
+    }\
+    bits##SIZE##_test_validity(out);\
+}\
+void bits##SIZE##_xor(const struct bits##SIZE *lhs,const struct bits##SIZE *rhs,struct bits##SIZE *out){\
+    out->data[SIZE/64] = 0ull;\
+    bits##SIZE##_test_validity(lhs);\
+    bits##SIZE##_test_validity(rhs);\
+    bits##SIZE##_test_validity(out);\
+    for(int i=0; i < 1+((SIZE-1)/64); ++i){\
+        out->data[i] = lhs->data[i] ^ rhs->data[i];\
+    }\
+    bits##SIZE##_test_validity(out);\
+}\
+void bits##SIZE##_not(struct bits##SIZE *bits){\
+    bits##SIZE##_test_validity(bits);\
+    for(int i=0; i < 1+((SIZE-1)/64); ++i){\
+        bits->data[i] = ~bits->data[i];\
+    }\
+    if(SIZE % 64 != 0){\
+        bits->data[SIZE / 64] >>= (64 - (SIZE % 64));\
+        bits->data[SIZE / 64] <<= (64 - (SIZE % 64));\
+    }\
+    bits##SIZE##_test_validity(bits);\
+}\
+void bits##SIZE##compound_or(struct bits##SIZE *lhs,const struct bits##SIZE *rhs){\
+    bits##SIZE##_or(lhs,rhs,lhs);\
+}\
+void bits##SIZE##compound_and(struct bits##SIZE *lhs,const struct bits##SIZE *rhs){\
+    bits##SIZE##_and(lhs,rhs,lhs);\
+}\
+void bits##SIZE##compound_xor(struct bits##SIZE *lhs,const struct bits##SIZE *rhs){\
+    bits##SIZE##_xor(lhs,rhs,lhs);\
 }
-
 
 
 BITSET_DECLARE(235);
