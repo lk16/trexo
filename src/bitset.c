@@ -4,21 +4,21 @@ uint64_t uint64_first_bit(uint64_t b){
   return b & -b;
 }
 
-int uint64_first_index(uint64_t b){
+unsigned uint64_first_index(uint64_t b){
     return uint64_only_bit_index(
         uint64_first_bit(b)
     );
 }
 
 
-int uint64_count(uint64_t b){
+unsigned uint64_count(uint64_t b){
     return uint64_counts[b & 0xFFFF] + 
     uint64_counts[(b >> 16) & 0xFFFF] +
     uint64_counts[(b >> 32) & 0xFFFF] +
     uint64_counts[(b >> 48) & 0xFFFF];
 }
 
-int uint64_only_bit_index(uint64_t b){
+unsigned uint64_only_bit_index(uint64_t b){
     const int table[83] = {
         64, 0, 1,-1, 2,27,-1, 8,
         3,62,28,24,-1,-1, 9,17,
@@ -176,7 +176,7 @@ const uint64_t uint64_reset[64] = {
     ~(1ull << 63)
 };
 
-const int uint64_counts[65536] = {
+const unsigned uint64_counts[65536] = {
     0,1,1,2,1,2,2,3,1,2,2,3,2,3,3,4,1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,
     1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,
     1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,
