@@ -8,10 +8,15 @@ enum trexo_direction{
     TREXO_LEFT = 0,
     TREXO_RIGHT = 1,
     TREXO_UP = 2,
-    TREXO_DOWN = 3,
-    TREXO_MIN_DIR = TREXO_LEFT,
-    TREXO_MAX_DIR = TREXO_DOWN
+    TREXO_DOWN = 3
 };
+
+struct trexo_move{
+    int field_id;
+    enum trexo_direction direction;
+};
+
+const struct trexo_move trexo_moves[TREXO_MAX_CHILDREN];
 
 // ------------------------------
 
@@ -86,8 +91,7 @@ int trexo_board_get_unfinished_brick_field_id(
 
 
 struct trexo_child_generator{
-    int next_field_id;
-    enum trexo_direction next_dir;
+    int move_id;
 };
 
 void trexo_child_generator_init(
